@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>MBTIscape</title>
+    <style>
+      body {
+        font-family: "Arial", sans-serif;
+        text-align: center;
+        margin: 20px;
+        background-color: #f4f4f4;
+      }
+      h1 {
+        color: #333;
+        font-size: 2em;
+        margin-bottom: 10px;
+      }
+      #question-container {
+        background-color: #fff;
+        border: 1px solid #ccc;
+        border-radius: 10px;
+        padding: 20px;
+        margin: 20px auto;
+        max-width: 400px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      }
+      .function-btn {
+        margin: 5px;
+        padding: 10px;
+        font-size: 14px;
+        cursor: pointer;
+        background-color: #4caf50;
+        color: #fff;
+        border: none;
+        border-radius: 5px;
+        outline: none;
+        transition: background-color 0.3s;
+      }
+      .function-btn:hover {
+        background-color: #45a049;
+      }
+      #options-container {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        margin-bottom: 20px;
+      }
+      #options-container input {
+        margin: 5px;
+        padding: 10px;
+        width: 150px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        outline: none;
+      }
+      #generate-btn {
+        padding: 10px;
+        font-size: 16px;
+        cursor: pointer;
+        background-color: #007bff;
+        color: #fff;
+        border: none;
+        border-radius: 5px;
+        outline: none;
+        transition: background-color 0.3s;
+      }
+      #generate-btn:hover {
+        background-color: #0056b3;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>MBTIscape</h1>
+
+    <div id="options-container">
+      <button class="function-btn" onclick="selectFunction('Se')">Se</button>
+      <button class="function-btn" onclick="selectFunction('Si')">Si</button>
+      <button class="function-btn" onclick="selectFunction('Fe')">Fe</button>
+      <button class="function-btn" onclick="selectFunction('Fi')">Fi</button>
+      <button class="function-btn" onclick="selectFunction('Te')">Te</button>
+      <button class="function-btn" onclick="selectFunction('Ti')">Ti</button>
+      <button class="function-btn" onclick="selectFunction('Ne')">Ne</button>
+      <button class="function-btn" onclick="selectFunction('Ni')">Ni</button>
+      <input type="text" id="custom-word-x" placeholder="Enter custom word" />
+      <input type="text" id="custom-word-y" placeholder="Enter custom word" />
+    </div>
+
+    <div id="question-container">
+      <p id="question"></p>
+      <button id="generate-btn" onclick="generateQuestion()">
+        Generate Question
+      </button>
+    </div>
+
+    <script>
+      const functionButtons = document.querySelectorAll(".function-btn");
+      const customWordXInput = document.getElementById("custom-word-x");
+      const customWordYInput = document.getElementById("custom-word-y");
+
+      let selectedFunction = "Se";
+      let randomX = "";
+      let randomY = "";
+      let currentQuestion = "";
+
+      function selectFunction(functionName) {
+        selectedFunction = functionName;
+        updateButtonStyles();
+        generateQuestion();
+      }
+
+      function updateButtonStyles() {
+        functionButtons.forEach((button) => {
+          if (button.innerText === selectedFunction) {
+            button.style.backgroundColor = "#C2714F";
+            button.style.color = "#fff";
+            button.style.border = "2px solid #1B2F33"; // Add a border for the selected function
+          } else {
+            button.style.backgroundColor = "#4CAF50";
+            button.style.color = "#fff";
+            button.style.border = "none";
+          }
+        });
+      }
+
+      const optionsY = [
+        "Identity",
+        "Relationships",
+        "Family",
+        "Growth",
+        "Learning",
+        "Work",
+        "Passion",
+        "Dreams",
+        "Challenges",
+        "Success",
+        "Failure",
+        "Love",
+        "Friendship",
+        "Health",
+        "Adventure",
+        "Experience",
+        "Memories",
+        "Happiness",
+        "Sadness",
+        "Resilience",
+        "Purpose",
+        "Creativity",
+        "Ambition",
+        "Discovery",
+        "Exploration",
+        "Balance",
+        "Transformation",
+        "Change",
+        "Reflection",
+        "Choices",
+        "Gratitude",
+        "Patience",
+        "Time",
+        "Spirituality",
+        "Belonging",
+        "Independence",
+        "Community",
+        "Diversity",
+        "Expression",
+        "Emotions",
+        "Mindfulness",
+        "Solitude",
+        "Celebration",
+        "Struggle",
+        "Achievement",
+        "Simplicity",
+        "Complexity",
+        "Adaptation",
+        "Communication",
+        "Fulfillment",
+      ];
+      const optionsX = [
+        "Nirvana",
+        "Compassion",
+        "Mindfulness",
+        "Meditation",
+        "Enlightenment",
+        "Dharma",
+        "Karma",
+        "Impermanence",
+        "Suffering",
+        "Middle Path",
+        "Equanimity",
+        "Liberation",
+        "Four Noble Truths",
+        "Eightfold Path",
+        "Mindful Awareness",
+        "Loving-kindness",
+        "Detachment",
+        "Bodhisattva",
+        "Insight",
+        "Tranquility",
+        "Non-attachment",
+        "Wisdom",
+        "Compassionate Action",
+        "Sangha (spiritual community)",
+        "Altruism",
+        "Right Understanding",
+        "Right Intention",
+        "Right Speech",
+        "Right Livelihood",
+        "Right Effort",
+        "Right Mindfulness",
+        "Right Concentration",
+        "Harmony",
+        "Equanimous",
+        "Liberation",
+        "Noble Eightfold Path",
+        "Mindful Living",
+        "Serenity",
+        "Awakening",
+        "Emptiness",
+        "Clarity",
+        "Selflessness",
+        "Non-violence",
+        "Harmony",
+        "Gratitude",
+        "Simplicity",
+        "Contemplation",
+        "Patience",
+        "Metta (loving-kindness meditation)",
+        "Serenity",
+        "Integral",
+        "Holon",
+        "Consciousness",
+        "Evolution",
+        "Spectrum",
+        "Unity",
+        "Spirit",
+        "Interconnectedness",
+        "Wholeness",
+        "Transcendence",
+        "Complexity",
+        "Enlightenment",
+        "Emanation",
+        "AQAL (All Quadrants, All Levels)",
+        "Interbeing",
+        "Spiral",
+        "Non-duality",
+        "Interpersonal",
+        "Transformation",
+        "Meta-awareness",
+        "Paradigm",
+        "Diversity",
+        "Mindfulness",
+        "Kosmos",
+        "Interdisciplinary",
+        "Global",
+        "Nondual",
+        "Integralism",
+        "Coherence",
+        "Interdependence",
+        "Self-realization",
+        "Pluralism",
+        "Depth",
+        "Embodiment",
+        "Synthesis",
+        "Insight",
+        "Emanation",
+        "Emergence",
+        "Metaphysics",
+        "Ontology",
+        "Authenticity",
+        "Spiral Dynamics",
+        "Harmony",
+        "Inclusivity",
+        "Embodied Spirituality",
+        "Meta-perspective",
+        "Wisdom",
+        "Integral Vision",
+        "Holistic",
+        "Conscious Evolution",
+      ];
+
+      const questionTemplates = {
+        Se: [
+          "What are the most striking details you've noticed about {X}, and how do they enhance your understanding of it?",
+          "How would you create an engaging and sensory-rich experience around {X}?",
+          "What practical steps would you take to tackle {X}, based on your current observations?",
+          "Can you describe a memorable experience where you had to react quickly and adapt to {X}, and what did you learn from it?",
+          "How do you use your senses to navigate and make decisions in {X}?",
+        ],
+        Si: [
+          "How does {X} compare to similar experiences or situations you've encountered in the past?",
+          "What specific memories or experiences come to mind when you think about {X}, and why do they stand out to you?",
+          "How do you see {X} fitting into the traditional understanding or historical context of {Y}?",
+          "In what ways have your personal experiences shaped your understanding or opinion of {X}?",
+          "Can you describe a time when {X} had a significant impact on your life or perspective, and how it influenced your decisions?",
+        ],
+        Fe: [
+          "How do you think {X} affects the emotional well-being of people, and what can be done to improve it?",
+          "What strategies would you suggest to enhance communication and understanding in {X}?",
+          "How do you balance your own needs with the needs of others when dealing with {X}?",
+          "What are some ways to build stronger emotional connections in {X}?",
+          "How do you perceive the emotional dynamics in {X}, and what impact do they have?",
+        ],
+        Fi: [
+          "When faced with a situation like {X}, how do you ensure that your actions align with your core values and beliefs?",
+          "How do you process and prioritize your personal feelings when making decisions about {X}?",
+          "Can you share an experience where you had to defend your personal ethics or values in a context like {X}?",
+          "How do you navigate the balance between staying true to yourself and adapting to external expectations, especially in situations like {X}?",
+          "In what ways do your personal values and emotions guide your understanding and response to {X}?",
+        ],
+        Te: [
+          "What are the most efficient strategies you would implement to improve {X}, and why?",
+          "How would you logically structure {X} to maximize productivity and results?",
+          "What measurable outcomes would you expect from successfully implementing {X}?",
+          "Can you analyze the pros and cons of {X}, focusing on its practical implications?",
+          "What systematic approach would you take to solve {X}, and what tools or resources would you utilize?",
+        ],
+        Ti: [
+          "What logical inconsistencies do you see in {X}, and how would you address them?",
+          "How would you break down the components of {X} to analyze it more effectively?",
+          "What is your process for critically evaluating {X}, and what criteria do you use?",
+          "Can you propose a theoretical model for understanding {X}, and how would you test its validity?",
+          "What are some underlying principles or patterns you have deduced in {X}?",
+        ],
+        Ne: [
+          "What are some innovative or unconventional uses you can think of for {X}?",
+          "How might {X} evolve in unexpected ways, and what are the potential outcomes?",
+          "What connections do you see between {X} and {Y}, and how might these insights lead to new ideas?",
+          "Can you imagine a scenario where {X} leads to significant changes in {Y}?",
+          "What are some 'out-of-the-box' solutions you could envision for {X}?",
+        ],
+        Ni: [
+          "How do you think {X} will evolve in the next decade, and what potential impacts could it have on {Y}?",
+          "In what ways do you believe {X} is connected to or influences {Y}, and what insights do you have about this relationship?",
+          "What are the deeper implications of {X} on our understanding of {Y}, and how do you see this changing our approach?",
+          "How do you reconcile the apparent contradictions in {X} with your personal experiences or observations in {Y}?",
+          "What unique perspectives do you have on {X}, and how do you think these could contribute to advancements or changes in {Y}?",
+        ],
+      };
+
+      function generateQuestion() {
+        const randomTemplate =
+          questionTemplates[selectedFunction][
+            Math.floor(
+              Math.random() * questionTemplates[selectedFunction].length
+            )
+          ];
+
+        randomX =
+          customWordXInput.value ||
+          optionsX[Math.floor(Math.random() * optionsX.length)];
+        randomY =
+          customWordYInput.value ||
+          optionsY[Math.floor(Math.random() * optionsY.length)];
+
+        currentQuestion = randomTemplate
+          .replace("{X}", randomX)
+          .replace("{Y}", randomY);
+        document.getElementById("question").innerText = currentQuestion;
+      }
+
+      // Initial button styles and question generation
+      updateButtonStyles();
+
+      // Update question when custom words are changed
+      customWordXInput.addEventListener("input", function () {
+        document.getElementById("question").innerText = currentQuestion.replace(
+          new RegExp(randomX, "g"),
+          customWordXInput.value
+        );
+        randomX = customWordXInput.value;
+      });
+
+      customWordYInput.addEventListener("input", function () {
+        document.getElementById("question").innerText = currentQuestion.replace(
+          new RegExp(randomY, "g"),
+          customWordYInput.value
+        );
+        randomY = customWordYInput.value;
+      });
+    </script>
+  </body>
+</html>
